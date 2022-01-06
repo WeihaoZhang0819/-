@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>张伟豪-张子怡</title>
+<link href="favicon.ico" rel="shortcut icon" />
+<style>
+body{
+  overflow: hidden;
+  margin: 0;
+}
+h1{
+  position: fixed;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  transform:translateY(-50%);
+  font-family: 'Love Ya Like A Sister', cursive;
+  font-size: 40px;
+  color: #c70012;
+  padding: 0 20px;
+}
+h1 span{
+    font-size:20px;
+}
+</style>
+
+</head>
+<body>
+<h1 id="h1"></h1>
+<canvas></canvas> 
+
+<script>
+var canvas = document.querySelector("canvas"),
+  ctx = canvas.getContext("2d");
+
+var ww,wh;
+
+function onResize(){
+  ww = canvas.width = window.innerWidth;
+  wh = canvas.height = window.innerHeight;
+}
+
+ctx.strokeStyle = "red";
+ctx.shadowBlur = 25;
+ctx.shadowColor = "hsla(0, 100%, 60%,0.5)";
+
+var precision = 100;
+var hearts = [];
+var mouseMoved = false;
+function onMove(e){
+  mouseMoved = true;
+  if(e.type === "touchmove"){
+    hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
+    hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
+  }
+  else{
+    hearts.push(new Heart(e.clientX, e.clientY));
+    hearts.push(new Heart(e.clientX, e.clientY));
+  }
+}
+
+var Heart = function(x,y){
+  this.x = x || Math.random()*ww;
+  this.y = y || Math.random()*wh;
+  this.size = Math.random()*2 + 1;
+  this.shadowBlur = Math.random() * 10;
+  this.speedX = (Math.random()+0.2-0.6) * 8;
+  this.speedY = (Math.random()+0.2-0.6) * 8;
+  this.speedSize = Math.random()*0.05 + 0.01;
+  this.opacity = 1;
+  this.vertices = [];
+  for (var i = 0; i < precision; i++) {
+    var step = (i / precision - 0.5) * (Math.PI * 2);
+    var vector = {
+      x : (15 * Math.pow(Math.sin(step), 3)),
+      y : -(13 * Math.cos(step) - 5 * Math.cos(2 * step) - 2 * Math.cos(3 * step) - Math.cos(4 * step)) 
+    }
+    this.vertices.push(vector);
+  }
+}
+
+Heart.prototype.draw = function(){
+  this.size -= this.speedSize;
+  this.x += this.speedX;
+  this.y += this.speedY;
+  ctx.save();
+  ctx.translate(-1000,this.y);
+  ctx.scale(this.size, this.size);
+  ctx.beginPath();
+  for (var i = 0; i < precision; i++) {
+    var vector = this.vertices[i];
+    ctx.lineTo(vector.x, vector.y);
+  }
+  ctx.globalAlpha = this.size;
+  ctx.shadowBlur = Math.round((3 - this.size) * 10);
+  ctx.shadowColor = "hsla(0, 100%, 60%,0.5)";
+  ctx.shadowOffsetX = this.x + 1000;
+  ctx.globalCompositeOperation = "screen"
+  ctx.closePath();
+  ctx.fill()
+  ctx.restore();
+};
+
+
+function render(a){
+  requestAnimationFrame(render);
+
+  hearts.push(new Heart())
+  ctx.clearRect(0,0,ww,wh);
+  for (var i = 0; i < hearts.length; i++) {
+    hearts[i].draw();
+    if(hearts[i].size <= 0){
+      hearts.splice(i,1);
+      i--;
+    }
+  }
+}
+
+
+onResize();
+window.addEventListener("mousemove", onMove);
+window.addEventListener("touchmove", onMove);
+window.addEventListener("resize", onResize);
+requestAnimationFrame(render);
+
+window.onload=function starttime(){
+        time(h1,'2021/10/21');                           // 在一起的时间
+        ptimer = setTimeout(starttime,1000);            // 添加计时器
+}
+
+    function time(obj,futimg){
+        var nowtime = new Date().getTime();             // 现在时间转换为时间戳
+        var futruetime =  new Date(futimg).getTime();   // 未来时间转换为时间戳
+        var msec = nowtime-futruetime;                  // 毫秒 未来时间-现在时间
+        var time = (msec/1000);                         // 毫秒/1000
+        var day = parseInt(time/86400);                 // 天  24*60*60*1000 
+        var hour = parseInt(time/3600)-24*day;          // 小时 60*60 总小时数-过去的小时数=现在的小时数 
+        var minute = parseInt(time%3600/60);            // 分 -(day*24) 以60秒为一整份 取余 剩下秒数 秒数/60 就是分钟数
+        var second = parseInt(time%60);                 // 以60秒为一整份 取余 剩下秒数
+//              console.log(hour+":"+minute+":"+second)
+//              alert(hour)
+        obj.innerHTML="亲爱的<br>咱俩在一起的时间已经：<br>"+day+"天"+hour+"小时"+minute+"分"+second+"秒"+"了<br><span>宝贝我们俩是10月21那天认识的,不知道从哪里开始,我就喜欢上你了，和你聊了几天，我们俩就在一起了，真爱来了，我们要好好把握。<br>我们俩到现在还没有见过面，之前一直说要见面的，可是因为各种原因，导致我们俩没有见面，你可是我在2022年第一个想见的人。<br>还有，你呀，困了就告诉我，想睡就睡，我们又不会没有明天，你醒了就给我发消息，我醒了就回你。<br>记得有一次我醒了没有回你，宝贝那次是我错了，以后都不会了，每天醒来我会第一个给你发消息的。<br>想我了就找我，别管我是不是在睡觉，是不是心情不好，是不是在吃饭，是不是会打扰，没关系的，你可以给我分享快乐，也可以抱怨委屈，我都听着，我们是一伙的。<br>你不用可以对我好，你可以对我发小脾气，我可以把我全身的耐心给你。顺利的话，我们就结婚，布顺利的话，我们就晚点。<br>我怕放过了这个机会就再也回不来了，我怕失去你就再也不会有这样的感觉了。<br>我就是希望你天天缠着我，缠着我聊天，每天都问我去哪里了，都干嘛了，吃了什么，什么都告诉我，连七八糟的，反正粘着我就行，我喜欢被你粘着，不能不管我。<br>可以吵架，但决定对不可以随意说分手。可以可以闹脾气，不可以故意不会消息。不要强迫对方做不喜欢的事。<br>和你在一起的日子真的很快乐，虽然有时候你老是不管面临多大的压力，不管前面的路如何崎岖。<br>不管经历过什么，我仍坚信最浪漫的事就是和你一起慢慢变老。宝贝我还有好多话想对你说......<br>张子怡要和张伟豪永远在一起......</span>"
+
+        return true;
+    }
+</script>
+
+</body>
+</html>
